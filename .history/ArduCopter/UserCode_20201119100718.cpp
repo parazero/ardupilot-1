@@ -6,13 +6,6 @@ void Copter::userhook_init()
     // put your initialisation code here
     // this will be called once at start-up
     hal.console->printf("UID: %lu - %lu - %lu\r\n", (*(unsigned long*)0x1FF0F420),(*(unsigned long*)0x1FF0F424),(*(unsigned long*)0x1FF0F428));
-    motors->set_update_rate(490);
-    motors->init(AP_Motors::MOTOR_FRAME_QUAD, AP_Motors::MOTOR_FRAME_TYPE_X);
-    // motors->output_min();
-    motors->set_roll(0.8);
-    motors->set_throttle(0.8);
-    motors->output();
-    rc().init();
 }
 #endif
 
@@ -45,24 +38,14 @@ void Copter::userhook_SlowLoop()
 
     double localRoll = (double)ToDeg(ahrs.roll);
     double localPitch = (double)ToDeg(ahrs.pitch);
-    uint16_t localRC1 = 0;
-    rc().get_pwm(1,localRC1);
-    hal.console->printf("PWM: %d\r\n", localRC1);
     hal.console->printf("Roll: %6.3f, Pitch: %6.3f\r\n", localRoll,localPitch);
-    if (localRC1 > 1800)
+    if (fabs(localRoll) > 45.0)
     {
-        hal.console->printf("I am great!\r\n");
-        motors->armed(false);
-        copter.failsafe_enable();
+        hal.console->printf("I am great!");
     }
     else
     {
-        hal.console->printf("I am small!\r\n");
-        copter.failsafe_disable();
-        motors->armed(true);
-        motors->set_roll(0.5);
-        motors->set_throttle(0.5);
-        motors->output();
+        hal.console->printf("I am small!");
     }
     
 }

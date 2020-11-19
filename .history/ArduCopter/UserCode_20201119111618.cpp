@@ -45,11 +45,8 @@ void Copter::userhook_SlowLoop()
 
     double localRoll = (double)ToDeg(ahrs.roll);
     double localPitch = (double)ToDeg(ahrs.pitch);
-    uint16_t localRC1 = 0;
-    rc().get_pwm(1,localRC1);
-    hal.console->printf("PWM: %d\r\n", localRC1);
     hal.console->printf("Roll: %6.3f, Pitch: %6.3f\r\n", localRoll,localPitch);
-    if (localRC1 > 1800)
+    if (fabs(localRoll) > 45.0)
     {
         hal.console->printf("I am great!\r\n");
         motors->armed(false);
